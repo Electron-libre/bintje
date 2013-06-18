@@ -7,7 +7,8 @@ Gem::Specification.new do |s|
   s.description = "Access Openerp object interface from ruby"
   s.authors     = ["Cedric Brancourt"]
   s.email       = 'cedric.brancourt@gmail.com'
+  s.add_development_dependency "rspec"
   s.files       = FileList['lib/**/*.rb'].to_a
-  s.homepage    =
-      'http://lol.com'
+  s.homepage    = 'http://lol.com'
+
 end
