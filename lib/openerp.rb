@@ -2,7 +2,22 @@ require 'xmlrpc/client'
 
 module Openerp
 
-  mattr_reader :host, :port, :common, :object, :base
+  def self.define_setter(attr)
+    class_eval("def self.#{attr}=(val) \n @@#{attr} = val \n end \n", __FILE__, __LINE__+1)
+  end
+
+  def self.define_getter(attr)
+    class_eval("def self.#{attr} \n @@#{attr} \n end \n", __FILE__, __LINE__+1)
+  end
+
+
+  [:host, :port, :common, :object, :base].each do |attr|
+    define_setter(attr)
+    define_getter(attr)
+  end
+
+
+
 
   def self.login(dbname, user, password)
     common_client.login(dbname, user, password)

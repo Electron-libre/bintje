@@ -2,6 +2,6 @@ require 'rubygems'
 
 require 'bintje'
 
-Rspec.configure do |config|
+RSpec.configure do |config|
 
 end
