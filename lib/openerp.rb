@@ -1,4 +1,5 @@
 require 'xmlrpc/client'
+require 'xmlrpc/parser_patch'
 
 module Openerp
 
