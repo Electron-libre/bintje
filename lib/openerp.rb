@@ -1,6 +1,7 @@
 require 'xmlrpc/client'
 require 'xmlrpc/parser_patch'
 
+
 module Openerp
 
   def self.define_setter(attr)
@@ -18,10 +19,16 @@ module Openerp
   end
 
 
-
-
   def self.login(dbname, user, password)
-    common_client.login(dbname, user, password)
+    begin
+      if uid = common_client.login(dbname, user, password)
+        BackendResponse.new(success: true, content: uid)
+      else
+        BackendResponse.new(success: false, errors: ['Authentication failed'])
+      end
+    rescue XMLRPC::FaultException => error
+      BackendResponse.new(success: false, errors: [error.faultCode])
+    end
   end
 
   def self.common_client
@@ -58,75 +65,72 @@ module Openerp
   end
 
 
-    # Current module methods
-    def self.included(base)
-      # Extends receiving class (base) with ClassMethods
-      base.extend(ClassMethods)
-      # Create class method in the receiving class
-      base.class_eval do
-        include ActiveModel::Model
+  # Current module methods
+  def self.included(base)
+    # Extends receiving class (base) with ClassMethods
+    base.extend(ClassMethods)
+  end
+
+  # TODO : is there any way / point in creation of connection object instance ? Connection.new(user_context) ...
+
+  ## extended class methods
+  module ClassMethods
+
+    ##
+    # To set model name in case it is not the humanized class name
+    # @param model : String
+    #
+    def set_openerp_model(model = String.new)
+      @@openerp_model = model
+    end
+
+    ##
+    # @return String : value of the openerp model
+    #
+    def openerp_model
+      @@openerp_model ||= self.name.underscore
+    end
+
+
+    def connection(user_context)
+      XMLRPC::Client.new(Openerp.host, Openerp.object, Openerp.port)
+      .proxy(nil, user_context[:dbname], user_context[:uid], user_context[:pwd])
+    end
+
+
+    def search(user_context, args = [])
+      begin
+        result = connection(user_context).execute(openerp_model, 'search', args)
+        BackendResponse.new(success: true, errors: nil, content: result, base_model_class: self)
+      rescue RuntimeError => e
+        BackendResponse.new(success: false, errors: e.message, content: nil)
       end
     end
 
-    # TODO : is there any way / point in creation of connection object instance ? Connection.new(user_context) ...
-
-    ## extended class methods
-    module ClassMethods
-
-      ##
-      # To set model name in case it is not the humanized class name
-      # @param model : String
-      #
-      def set_openerp_model(model = String.new)
-        @@openerp_model = model
+    def create(user_context, args = [])
+      begin
+        id = connection(user_context).execute(openerp_model, 'create', args)
+        {success: true, errors: nil, id: id}
+      rescue RuntimeError => e
+        Rails.logger.error(e.message)
+        {success: false, errors: e.message}
       end
+    end
 
-      ##
-      # @return String : value of the openerp model
-      #
-      def openerp_model
-        @@openerp_model
+    def read(user_context, ids, fields = [])
+      connection(user_context).execute(openerp_model, 'read', ids, fields)
+    end
+
+    def write(user_context, ids, args)
+      begin
+        res = connection(user_context).execute(openerp_model, 'write', ids, args)
+        {success: res, errors: nil}
+      rescue RuntimeError => e
+        Rails.logger.error(e.message.inspect)
+        {success: false, errors: e.message}
       end
-
-
-      def connection(user_context)
-        XMLRPC::Client.new(Openerp.host, Openerp.object, Openerp.port).proxy(nil, user_context[:dbname], user_context[:uid], user_context[:pwd])
-      end
-
-
-      def search(user_context, args = [])
-        begin
-          result = connection(user_context).execute(openerp_model, 'search', args)
-          BackendResponse.new(success: true, errors: nil, content: result, base_model_class: self)
-        rescue RuntimeError => e
-          BackendResponse.new(success: false, errors: e.message, content: nil)
-        end
-      end
-
-      def create(user_context, args = [])
-        begin
-          id = connection(user_context).execute(openerp_model, 'create', args)
-          {success: true, errors: nil, id: id}
-        rescue RuntimeError => e
-          Rails.logger.error(e.message)
-          {success: false, errors: e.message}
-        end
-      end
-
-      def read(user_context, ids, fields = [])
-        connection(user_context).execute(openerp_model, 'read', ids, fields)
-      end
-
-      def write(user_context, ids, args)
-        begin
-          res = connection(user_context).execute(openerp_model, 'write', ids, args)
-          {success: res, errors: nil}
-        rescue RuntimeError => e
-          Rails.logger.error(e.message.inspect)
-          {success: false, errors: e.message}
-        end
-      end
-
     end
 
   end
+
+end
