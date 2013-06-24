@@ -12,7 +12,7 @@ describe "Openerp" do
       it 'build new XMLRPC connection client Proxy' do
         allow_message_expectations_on_nil
         XMLRPC::Client.should_receive(:new)
-        .with('localhost','/xmlrpc/common','8069')
+        .with('localhost', '/xmlrpc/common', '8069')
         .and_return().should_receive(:proxy).with(nil)
         Openerp.common_client
       end
@@ -24,9 +24,8 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.wrong_data_base_name
         end
-        let(:response) {Openerp.login('dbname','user','password')}
+        let(:response) { Openerp.login('dbname', 'user', 'password') }
 
-        it_behaves_like "any request"
         it_behaves_like "any failed request"
 
         it " response.errors : #{ServerStub::Common::Login.wrong_database_name_fault_code}" do
@@ -39,9 +38,8 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.wrong_user_name
         end
-        let( :response) { Openerp.login('dbname','user','password')}
+        let(:response) { Openerp.login('dbname', 'user', 'password') }
 
-        it_behaves_like "any request"
         it_behaves_like "any failed request"
 
       end
@@ -51,9 +49,8 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.successful
         end
-        let(:response){Openerp.login('dbname', 'user', 'password')}
+        let(:response) { Openerp.login('dbname', 'user', 'password') }
 
-        it_behaves_like 'any request'
         it_behaves_like 'any successful request'
 
         it "response.content.class = Fixnum (user id)" do
@@ -67,13 +64,9 @@ describe "Openerp" do
       end
 
 
-
-
-
     end
 
   end
-
 
 
 end
