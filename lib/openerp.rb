@@ -116,10 +116,10 @@ module Openerp
     def write(user_context, ids, args)
       begin
         res = connection(user_context).execute(openerp_model, 'write', ids, args)
-        {success: res, errors: nil}
+        BackendResponse.new( success: res, errors: nil)
       rescue RuntimeError => e
         Rails.logger.error(e.message.inspect)
-        {success: false, errors: e.message}
+        BackendResponse.new(success: false, errors: e.message)
       end
     end
 

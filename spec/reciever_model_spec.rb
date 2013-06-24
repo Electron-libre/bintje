@@ -119,4 +119,34 @@ describe 'reciever model' do
 
   end
 
+  describe ".write(user_context,[ids],{field:'value'})" do
+    before(:each) do
+      allow_message_expectations_on_nil
+      ServerStub::Object::Write.prologue
+    end
+    let(:response) { ReceiverModel.write(user_context, [1,2],{field:'value'})}
+
+    it_behaves_like "any object request"
+
+    it "invokes execute with model_name, 'write', [ids], {field:'value'}" do
+      ServerStub::Object::Connection.prologue.should_receive(:execute)
+      .with('receiver_model', 'write', [1,2], {field:'value'})
+      response
+    end
+
+    context "successful request" do
+      before(:each) do
+        ServerStub::Object::Write.successful
+      end
+
+      it_behaves_like "any successful request"
+
+      it "response.content should be nil" do
+        response.content.should be nil
+      end
+
+    end
+
+  end
+
 end
