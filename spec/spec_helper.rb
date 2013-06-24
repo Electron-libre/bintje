@@ -11,4 +11,5 @@ def openerp_settings
   Openerp.host = 'localhost'
   Openerp.port = '8069'
   Openerp.common = '/xmlrpc/common'
+  Openerp.object = '/xmlrpc/object'
 end
