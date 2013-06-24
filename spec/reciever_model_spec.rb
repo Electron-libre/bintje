@@ -34,21 +34,22 @@ describe 'reciever model' do
 
     end
 
+  end
+
     describe ".connection(user_context:{dbname:String,uid:Fixnum,pwd:String})" do
-      let(:user_context) { {dbname:'dbname', uid:2,pwd:'pwd' }}
+      let(:user_context) { {dbname: 'dbname', uid: 2, pwd: 'pwd'} }
 
       it "should build a new XMLRPC connection" do
         allow_message_expectations_on_nil
         XMLRPC::Client.should_receive(:new)
-        .with(Openerp.host,Openerp.object,Openerp.port)
+        .with(Openerp.host, Openerp.object, Openerp.port)
         .and_return().should_receive(:proxy)
         ReceiverModel.connection(user_context)
       end
 
 
-
     end
 
-  end
+
 
 end
