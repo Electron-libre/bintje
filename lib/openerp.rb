@@ -44,24 +44,10 @@ module Openerp
       @success = success
       @errors = errors
       @content = content
-      @base_model_class = base_model_class
     end
 
     attr_accessor :success, :errors, :content
 
-    ##
-    # Instantiate object from @base_model_class if it sets and elements responds to keys
-    #
-    def objectify
-      self.content.each do |el|
-        if @base_model_class && el.respond_to?(:keys)
-          @base_model_class.new(el)
-        else
-          el
-        end
-      end
-
-    end
   end
 
 
@@ -118,7 +104,13 @@ module Openerp
     end
 
     def read(user_context, ids, fields = [])
-      connection(user_context).execute(openerp_model, 'read', ids, fields)
+      begin
+        result = connection(user_context).execute(openerp_model, 'read', ids, fields)
+        BackendResponse.new(success: true, errors: nil, content: result)
+      rescue => e
+        BackendResponse.new(success: false, errors: e)
+      end
+
     end
 
     def write(user_context, ids, args)

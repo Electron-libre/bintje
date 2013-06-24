@@ -66,7 +66,7 @@ describe 'reciever model' do
       ReceiverModel.search(user_context, [["field", "operator", "value"]])
     end
 
-    it "invokes execute with search, model_name, params" do
+    it "invokes execute with model_name, search, [params]" do
       ServerStub::Object::Connection.prologue.should_receive(:execute)
       .with('receiver_model','search',[["field", "operator", "value"]])
       ReceiverModel.search(user_context, [["field", "operator", "value"]])
@@ -86,5 +86,42 @@ describe 'reciever model' do
 
   end
 
+  describe ".read(user_context,[ids],[fields])" do
+    before(:each) do
+      allow_message_expectations_on_nil
+      ServerStub::Object::Read.prologue
+    end
+
+    let(:response) {ReceiverModel.read(user_context,[1,2],['fields']) }
+
+    it "creates connection with context" do
+      ReceiverModel.should_receive(:connection).with(user_context)
+      response
+    end
+
+    it "invokes execute with model_name, read, [ids], [fields]" do
+      ServerStub::Object::Connection.prologue.should_receive(:execute)
+      .with('receiver_model','read',[1,2],['fields'])
+      response
+    end
+
+    context "successful request" do
+      before(:each) do
+        ServerStub::Object::Read.successful
+      end
+
+      it_behaves_like "any successful request"
+
+      it "response.content should be Array" do
+        response.content.should be_an Array
+      end
+
+      it "reponse.content.first should be #{ServerStub::Object::Read.standard_response.first}" do
+        response.content.first.should eql ServerStub::Object::Read.standard_response.first
+      end
+
+    end
+
+  end
 
 end

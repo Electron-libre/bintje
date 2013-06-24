@@ -62,6 +62,21 @@ module ServerStub
 
     end
 
+    module Read
+      def self.prologue
+        Connection.prologue.stub(:execute)
+        .with('receiver_model','read',[1,2],['fields'])
+      end
+
+      def self.standard_response
+        [{id:1,name:'un'},{id:2,name:'two'}]
+      end
+
+      def self.successful
+        self.prologue.and_return(self.standard_response)
+      end
+    end
+
   end
 
 end
