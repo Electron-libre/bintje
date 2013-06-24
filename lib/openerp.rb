@@ -96,10 +96,10 @@ module Openerp
     def create(user_context, args = [])
       begin
         id = connection(user_context).execute(openerp_model, 'create', args)
-        {success: true, errors: nil, id: id}
+        BackendResponse.new(success: true, errors: nil, content: id)
       rescue RuntimeError => e
         Rails.logger.error(e.message)
-        {success: false, errors: e.message}
+        BackendResponse.new(success: false, errors: e.message)
       end
     end
 

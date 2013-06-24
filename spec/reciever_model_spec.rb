@@ -149,4 +149,35 @@ describe 'reciever model' do
 
   end
 
+  describe ".create(user_context,{field:value})" do
+    before(:each) do
+      allow_message_expectations_on_nil
+      ServerStub::Object::Create.prologue
+    end
+
+    let(:response) { ReceiverModel.create(user_context,{field:'value'})}
+
+    it_behaves_like "any object request"
+
+    it "invokes execute with model_name, 'create', {field:'value'}" do
+      ServerStub::Object::Connection.prologue.should_receive(:execute)
+      .with('receiver_model', 'create', {field:'value'})
+      response
+    end
+
+    context "successful request" do
+      before(:each) do
+        ServerStub::Object::Create.successful
+      end
+
+      it_behaves_like "any successful request"
+
+      it "reponse.content should be 1" do
+        response.content.should be 1
+      end
+
+    end
+
+  end
+
 end

@@ -92,6 +92,21 @@ module ServerStub
       end
     end
 
+    module Create
+      def self.prologue
+        Connection.prologue.stub(:execute)
+        .with('receiver_model','create',{field:'value'})
+      end
+
+      def self.standard_response
+        1
+      end
+
+      def self.successful
+        self.prologue.and_return(self.standard_response)
+      end
+    end
+
 
   end
 
