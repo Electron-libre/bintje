@@ -60,16 +60,14 @@ describe 'reciever model' do
       allow_message_expectations_on_nil
       ServerStub::Object::Search.prologue
     end
+    let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]]) }
 
-    it "creates connection with context" do
-      ReceiverModel.should_receive(:connection).with(user_context)
-      ReceiverModel.search(user_context, [["field", "operator", "value"]])
-    end
+    it_behaves_like "any object request"
 
     it "invokes execute with model_name, search, [params]" do
       ServerStub::Object::Connection.prologue.should_receive(:execute)
       .with('receiver_model','search',[["field", "operator", "value"]])
-      ReceiverModel.search(user_context, [["field", "operator", "value"]])
+      response
     end
 
     context "successful request" do
@@ -94,10 +92,7 @@ describe 'reciever model' do
 
     let(:response) {ReceiverModel.read(user_context,[1,2],['fields']) }
 
-    it "creates connection with context" do
-      ReceiverModel.should_receive(:connection).with(user_context)
-      response
-    end
+    it_behaves_like "any object request"
 
     it "invokes execute with model_name, read, [ids], [fields]" do
       ServerStub::Object::Connection.prologue.should_receive(:execute)

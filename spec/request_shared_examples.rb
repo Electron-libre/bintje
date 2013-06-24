@@ -20,6 +20,12 @@ module RequestSharedExamples
     end
   end
 
+  shared_examples_for "any object request" do
+    it "creates connection with context" do
+      ReceiverModel.should_receive(:connection).with(user_context)
+      response
+    end
+  end
 
 
 end
