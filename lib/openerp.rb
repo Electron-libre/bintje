@@ -81,14 +81,14 @@ module Openerp
     # @param model : String
     #
     def set_openerp_model(model = String.new)
-      @@openerp_model = model
+      @openerp_model = model
     end
 
     ##
     # @return String : value of the openerp model
     #
     def openerp_model
-      @@openerp_model ||= self.name.underscore
+      @openerp_model ||= self.name.underscore
     end
 
 

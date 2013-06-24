@@ -40,4 +40,28 @@ module ServerStub
     end
 
   end
+
+  module Object
+    module Connection
+      def self.prologue
+
+        XMLRPC::Client.stub(:new).with(Openerp.host, Openerp.object, Openerp.port)
+        .and_return().stub(:proxy).with(nil,'dbname',2,'pwd').and_return()
+      end
+    end
+
+    module Search
+      def self.prologue
+        Connection.prologue.stub(:execute)
+        .with('receiver_model','search', [['field', 'operator', 'value' ]])
+      end
+
+      def self.successful
+          self.prologue.and_return([1,2])
+      end
+
+    end
+
+  end
+
 end
