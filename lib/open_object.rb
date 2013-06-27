@@ -36,7 +36,7 @@ module OpenObject
   end
 
   ##
-  # Encapsultation of openerp responses
+  # Encapsultation of open_object responses
   #
   class BackendResponse
 
@@ -66,15 +66,15 @@ module OpenObject
     # To set model name in case it is not the humanized class name
     # @param model : String
     #
-    def set_openerp_model(model = String.new)
-      @openerp_model = model
+    def set_open_object_model(model = String.new)
+      @open_object_model = model
     end
 
     ##
-    # @return String : value of the openerp model
+    # @return String : value of the open_object model
     #
-    def openerp_model
-      @openerp_model ||= self.name.underscore
+    def open_object_model
+      @open_object_model ||= self.name.underscore
     end
 
 
@@ -86,7 +86,7 @@ module OpenObject
 
     def search(user_context, args = [])
       begin
-        result = connection(user_context).execute(openerp_model, 'search', args)
+        result = connection(user_context).execute(open_object_model, 'search', args)
         BackendResponse.new(success: true, errors: nil, content: result, base_model_class: self)
       rescue RuntimeError => e
         BackendResponse.new(success: false, errors: e.message, content: nil)
@@ -95,7 +95,7 @@ module OpenObject
 
     def create(user_context, args = [])
       begin
-        id = connection(user_context).execute(openerp_model, 'create', args)
+        id = connection(user_context).execute(open_object_model, 'create', args)
         BackendResponse.new(success: true, errors: nil, content: id)
       rescue RuntimeError => e
         Rails.logger.error(e.message)
@@ -105,7 +105,7 @@ module OpenObject
 
     def read(user_context, ids, fields = [])
       begin
-        result = connection(user_context).execute(openerp_model, 'read', ids, fields)
+        result = connection(user_context).execute(open_object_model, 'read', ids, fields)
         BackendResponse.new(success: true, errors: nil, content: result)
       rescue => e
         BackendResponse.new(success: false, errors: e)
@@ -114,7 +114,7 @@ module OpenObject
 
     def write(user_context, ids, args)
       begin
-        res = connection(user_context).execute(openerp_model, 'write', ids, args)
+        res = connection(user_context).execute(open_object_model, 'write', ids, args)
         BackendResponse.new( success: res, errors: nil)
       rescue RuntimeError => e
         Rails.logger.error(e.message.inspect)

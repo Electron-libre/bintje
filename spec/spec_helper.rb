@@ -7,9 +7,9 @@ end
 
 require 'server_stub'
 
-def openerp_settings
-  Openerp.host = 'localhost'
-  Openerp.port = '8069'
-  Openerp.common = '/xmlrpc/common'
-  Openerp.object = '/xmlrpc/object'
+def open_object_settings
+  OpenObject.host = 'localhost'
+  OpenObject.port = '8069'
+  OpenObject.common = '/xmlrpc/common'
+  OpenObject.object = '/xmlrpc/object'
 end

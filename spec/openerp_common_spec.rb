@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'request_shared_examples'
 
-describe "Openerp" do
+describe "OpenObject" do
   context 'for common context' do
 
     before :each do
-      openerp_settings
+      open_object_settings
     end
 
     describe '.common_client' do
@@ -14,7 +14,7 @@ describe "Openerp" do
         XMLRPC::Client.should_receive(:new)
         .with('localhost', '/xmlrpc/common', '8069')
         .and_return().should_receive(:proxy).with(nil)
-        Openerp.common_client
+        OpenObject.common_client
       end
     end
 
@@ -24,7 +24,7 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.wrong_data_base_name
         end
-        let(:response) { Openerp.login('dbname', 'user', 'password') }
+        let(:response) { OpenObject.login('dbname', 'user', 'password') }
 
         it_behaves_like "any failed request"
 
@@ -38,7 +38,7 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.wrong_user_name
         end
-        let(:response) { Openerp.login('dbname', 'user', 'password') }
+        let(:response) { OpenObject.login('dbname', 'user', 'password') }
 
         it_behaves_like "any failed request"
 
@@ -49,7 +49,7 @@ describe "Openerp" do
         before(:each) do
           ServerStub::Common::Login.successful
         end
-        let(:response) { Openerp.login('dbname', 'user', 'password') }
+        let(:response) { OpenObject.login('dbname', 'user', 'password') }
 
         it_behaves_like 'any successful request'
 

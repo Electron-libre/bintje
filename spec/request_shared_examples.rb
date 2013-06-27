@@ -1,8 +1,8 @@
 module RequestSharedExamples
 
   shared_examples_for "any request" do
-    it "response.class == Openerp::BackendResponse" do
-      response.class.should be Openerp::BackendResponse
+    it "response.class == OpenObject::BackendResponse" do
+      response.class.should be OpenObject::BackendResponse
     end
   end
 

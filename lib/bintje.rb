@@ -1,2 +1,2 @@
 require 'active_support/core_ext/string/inflections'
-require 'openerp'
+require 'open_object'

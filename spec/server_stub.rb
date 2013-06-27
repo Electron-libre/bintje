@@ -45,7 +45,7 @@ module ServerStub
     module Connection
       def self.prologue
 
-        XMLRPC::Client.stub(:new).with(Openerp.host, Openerp.object, Openerp.port)
+        XMLRPC::Client.stub(:new).with(OpenObject.host, OpenObject.object, OpenObject.port)
         .and_return().stub(:proxy).with(nil,'dbname',2,'pwd').and_return()
       end
     end
