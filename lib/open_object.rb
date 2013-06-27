@@ -2,7 +2,7 @@ require 'xmlrpc/client'
 require 'xmlrpc/parser_patch'
 
 
-module Openerp
+module OpenObject
 
   def self.define_setter(attr)
     class_eval("def self.#{attr}=(val) \n @@#{attr} = val \n end \n", __FILE__, __LINE__+1)
@@ -79,7 +79,7 @@ module Openerp
 
 
     def connection(user_context)
-      XMLRPC::Client.new(Openerp.host, Openerp.object, Openerp.port)
+      XMLRPC::Client.new(OpenObject.host, OpenObject.object, OpenObject.port)
       .proxy(nil, user_context[:dbname], user_context[:uid], user_context[:pwd])
     end
 
@@ -110,7 +110,6 @@ module Openerp
       rescue => e
         BackendResponse.new(success: false, errors: e)
       end
-
     end
 
     def write(user_context, ids, args)
