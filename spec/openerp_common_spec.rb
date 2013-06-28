@@ -26,10 +26,12 @@ describe "OpenObject" do
         end
         let(:response) { OpenObject.login('dbname', 'user', 'password') }
 
-        it_behaves_like "any failed request"
+        it "response.success : false" do
+          response.success.should be false
+        end
 
         it " response.errors : #{ServerStub::Common::Login.wrong_database_name_fault_code}" do
-          response.errors.should include(ServerStub::Common::Login.wrong_database_name_fault_code)
+          response.errors[:faultCode].should include(ServerStub::Common::Login.wrong_database_name_fault_code)
         end
 
       end
@@ -40,7 +42,9 @@ describe "OpenObject" do
         end
         let(:response) { OpenObject.login('dbname', 'user', 'password') }
 
-        it_behaves_like "any failed request"
+        it "response.success : false" do
+          response.success.should be false
+        end
 
       end
 

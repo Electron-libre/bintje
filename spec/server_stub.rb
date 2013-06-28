@@ -1,4 +1,13 @@
 module ServerStub
+
+  def self.faultCode
+    File.read('spec/data/faultCode.txt')
+  end
+
+  def self.faultString
+    File.read('spec/data/faultString.txt')
+  end
+
   module Common
     module Login
 
@@ -60,6 +69,10 @@ module ServerStub
           self.prologue.and_return([1,2])
       end
 
+      def self.failure
+        self.prologue.and_raise(XMLRPC::FaultException.new(ServerStub.faultCode, ServerStub.faultString))
+      end
+
     end
 
     module Read
@@ -74,6 +87,10 @@ module ServerStub
 
       def self.successful
         self.prologue.and_return(self.standard_response)
+      end
+
+      def self.failure
+        self.prologue.and_raise(XMLRPC::FaultException.new(ServerStub.faultCode, ServerStub.faultString))
       end
     end
 
@@ -90,6 +107,10 @@ module ServerStub
       def self.successful
         self.prologue.and_return(self.standard_response)
       end
+
+      def self.failure
+        self.prologue.and_raise(XMLRPC::FaultException.new(ServerStub.faultCode, ServerStub.faultString))
+      end
     end
 
     module Create
@@ -104,6 +125,10 @@ module ServerStub
 
       def self.successful
         self.prologue.and_return(self.standard_response)
+      end
+
+      def self.failure
+        self.prologue.and_raise(XMLRPC::FaultException.new(ServerStub.faultCode, ServerStub.faultString))
       end
     end
 

@@ -82,6 +82,15 @@ describe 'reciever model' do
 
     end
 
+    context "failed request" do
+      before(:each) do
+        ServerStub::Object::Search.failure
+      end
+
+      it_behaves_like "any failed request"
+
+    end
+
   end
 
   describe ".read(user_context,[ids],[fields])" do
@@ -117,6 +126,15 @@ describe 'reciever model' do
 
     end
 
+    context "failed request" do
+      before(:each) do
+        ServerStub::Object::Read.failure
+      end
+
+      it_behaves_like "any failed request"
+
+    end
+
   end
 
   describe ".write(user_context,[ids],{field:'value'})" do
@@ -144,6 +162,15 @@ describe 'reciever model' do
       it "response.content should be nil" do
         response.content.should be nil
       end
+
+    end
+
+    context "failed request" do
+      before(:each) do
+        ServerStub::Object::Write.failure
+      end
+
+      it_behaves_like "any failed request"
 
     end
 
@@ -175,6 +202,15 @@ describe 'reciever model' do
       it "reponse.content should be 1" do
         response.content.should be 1
       end
+
+    end
+
+    context "failed request" do
+      before(:each) do
+        ServerStub::Object::Create.failure
+      end
+
+      it_behaves_like "any failed request"
 
     end
 

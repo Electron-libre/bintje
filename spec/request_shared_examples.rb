@@ -18,6 +18,15 @@ module RequestSharedExamples
     it "response.success : false" do
       response.success.should be false
     end
+
+    it "response.errors[:faultCode] Server faultCode" do
+      response.errors[:faultCode].should eql ServerStub.faultCode
+    end
+
+    it "response.errors[:faultString] Server faultString" do
+      response.errors[:faultString].should eql ServerStub.faultString
+    end
+
   end
 
   shared_examples_for "any object request" do

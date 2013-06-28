@@ -13,7 +13,7 @@ module OpenObject
   end
 
 
-  [:host, :port, :common, :object, :base].each do |attr|
+  [:host, :port, :common, :object, :base, :logger].each do |attr|
     define_setter(attr)
     define_getter(attr)
   end
@@ -27,12 +27,23 @@ module OpenObject
         BackendResponse.new(success: false, errors: ['Authentication failed'])
       end
     rescue XMLRPC::FaultException => error
-      BackendResponse.new(success: false, errors: [error.faultCode])
+      BackendResponse.new(success: false, errors: {faultCode: error.faultCode, faultString: error.faultString})
     end
   end
 
   def self.common_client
     XMLRPC::Client.new(@@host, @@common, @@port).proxy(nil)
+  end
+
+  # Take a code block and rescue XMLRPC::FaultException
+  # Place the exception details in errors hash
+  def self.rescue_xmlrpc_fault(&block)
+    begin
+      yield block
+    rescue XMLRPC::FaultException => error
+      OpenObject.logger.error("Rescued from XMLRPC::FaultException : \n #{error.inspect}")
+      BackendResponse.new(success: false, errors: {faultCode: error.faultCode, faultString: error.faultString})
+    end
   end
 
   ##
@@ -85,40 +96,38 @@ module OpenObject
 
 
     def search(user_context, args = [])
-      begin
+      OpenObject.rescue_xmlrpc_fault do
         result = connection(user_context).execute(open_object_model, 'search', args)
-        BackendResponse.new(success: true, errors: nil, content: result, base_model_class: self)
-      rescue RuntimeError => e
-        BackendResponse.new(success: false, errors: e.message, content: nil)
+        OpenObject.logger.debug("OpenObject.search with #{args}")
+        OpenObject.logger.debug("Responded with : #{result}")
+        BackendResponse.new(success: true, errors: nil, content: result)
       end
     end
 
     def create(user_context, args = [])
-      begin
-        id = connection(user_context).execute(open_object_model, 'create', args)
-        BackendResponse.new(success: true, errors: nil, content: id)
-      rescue RuntimeError => e
-        Rails.logger.error(e.message)
-        BackendResponse.new(success: false, errors: e.message)
+      OpenObject.rescue_xmlrpc_fault do
+        result = connection(user_context).execute(open_object_model, 'create', args)
+        OpenObject.logger.debug("OpenObject.create with #{args}")
+        OpenObject.logger.debug("Responded with : #{result}")
+        BackendResponse.new(success: true, errors: nil, content: result)
       end
     end
 
     def read(user_context, ids, fields = [])
-      begin
+      OpenObject.rescue_xmlrpc_fault do
         result = connection(user_context).execute(open_object_model, 'read', ids, fields)
+        OpenObject.logger.debug("OpenObject.read ids : #{ids} fields :  #{fields}")
+        OpenObject.logger.debug("Responded with : #{result}")
         BackendResponse.new(success: true, errors: nil, content: result)
-      rescue => e
-        BackendResponse.new(success: false, errors: e)
       end
     end
 
     def write(user_context, ids, args)
-      begin
-        res = connection(user_context).execute(open_object_model, 'write', ids, args)
-        BackendResponse.new( success: res, errors: nil)
-      rescue RuntimeError => e
-        Rails.logger.error(e.message.inspect)
-        BackendResponse.new(success: false, errors: e.message)
+      OpenObject.rescue_xmlrpc_fault do
+        result = connection(user_context).execute(open_object_model, 'write', ids, args)
+        OpenObject.logger.debug("OpenObject.write ids : #{ids} args :  #{args}")
+        OpenObject.logger.debug("Responded with : #{result}")
+        BackendResponse.new( success: result, errors: nil)
       end
     end
 
