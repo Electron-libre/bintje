@@ -5,7 +5,7 @@ require 'bintje/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "bintje"
-  spec.version       = Templates::VERSION
+  spec.version       = Bintje::VERSION
   spec.authors       = ["Cedric Brancourt"]
   spec.email         = ["cedric.brancourt@gmail.com"]
   spec.description   = %q{OpenObject xmlrpc interface}
