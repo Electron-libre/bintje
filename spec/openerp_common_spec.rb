@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'request_shared_examples'
 
 describe "OpenObject" do
+
   context 'for common context' do
 
     before :each do
