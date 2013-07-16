@@ -99,15 +99,26 @@ describe 'reciever model' do
 
     context "without limit and offset" do
 
+      it_behaves_like "any object request"
 
+      it "invokes execute with model_name, search, [params], 0, 0" do
+        ServerStub::Object::Connection.prologue.should_receive(:execute)
+        .with('receiver_model','search',[["field", "operator", "value"]], 0,0)
+        response
 
-    it_behaves_like "any object request"
-
-    it "invokes execute with model_name, search, [params], 0, 0" do
-      ServerStub::Object::Connection.prologue.should_receive(:execute)
-      .with('receiver_model','search',[["field", "operator", "value"]], 0,0)
-      response
+      end
     end
+
+
+    context "with order parameter" do
+      let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]], order: 'name DESC') }
+
+      it "invokes execute with model_name, search, [params], 0, 0, order" do
+        ServerStub::Object::Connection.prologue.should_receive(:execute)
+        .with('receiver_model','search',[["field", "operator", "value"]], 0,0, 'name DESC')
+        response
+      end
+
     end
 
     context "successful request" do
