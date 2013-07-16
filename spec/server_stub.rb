@@ -62,7 +62,7 @@ module ServerStub
     module Search
       def self.prologue
         Connection.prologue.stub(:execute)
-        .with('receiver_model','search', [['field', 'operator', 'value' ]])
+        .with('receiver_model','search', [['field', 'operator', 'value' ]],0,0)
       end
 
       def self.successful

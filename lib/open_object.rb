@@ -95,9 +95,9 @@ module OpenObject
     end
 
 
-    def search(user_context, args = [])
+    def search(user_context, args = [], offset: 0, limit: 0)
       OpenObject.rescue_xmlrpc_fault do
-        result = connection(user_context).execute(open_object_model, 'search', args)
+        result = connection(user_context).execute(open_object_model, 'search', args, offset, limit)
         OpenObject.logger.debug("OpenObject.search with #{args}")
         OpenObject.logger.debug("Responded with : #{result}")
         BackendResponse.new(success: true, errors: nil, content: result)

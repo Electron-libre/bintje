@@ -55,19 +55,59 @@ describe 'reciever model' do
 
   end
 
-  describe ".search(user_context, args = [])" do
+  describe ".search(user_context, args = [], limit:Fixnum, offset:Fixnum)" do
     before(:each) do
       allow_message_expectations_on_nil
       ServerStub::Object::Search.prologue
     end
+
     let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]]) }
+
+
+    context "with offset and limit parameters" do
+      let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]],offset: 10,limit: 5) }
+
+      it "invokes execute with model_name, search, [params], offset,limit" do
+        ServerStub::Object::Connection.prologue.should_receive(:execute)
+        .with('receiver_model','search',[["field", "operator", "value"]], 10 , 5 )
+        response
+      end
+
+    end
+
+    context "with limit parameter (missing offset)" do
+      let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]],limit: 5) }
+
+      it "invokes execute with model_name, search, [params], offset :0, limit " do
+        ServerStub::Object::Connection.prologue.should_receive(:execute)
+        .with('receiver_model','search',[["field", "operator", "value"]], 0 , 5 )
+        response
+      end
+
+    end
+
+    context "with offset parameter (missing limit)" do
+      let(:response) { ReceiverModel.search(user_context, [["field", "operator", "value"]], offset: 10) }
+
+      it "invokes execute with model_name, search, [params], offset, limit: 0" do
+        ServerStub::Object::Connection.prologue.should_receive(:execute)
+        .with('receiver_model','search',[["field", "operator", "value"]], 10 , 0 )
+        response
+      end
+
+    end
+
+    context "without limit and offset" do
+
+
 
     it_behaves_like "any object request"
 
-    it "invokes execute with model_name, search, [params]" do
+    it "invokes execute with model_name, search, [params], 0, 0" do
       ServerStub::Object::Connection.prologue.should_receive(:execute)
-      .with('receiver_model','search',[["field", "operator", "value"]])
+      .with('receiver_model','search',[["field", "operator", "value"]], 0,0)
       response
+    end
     end
 
     context "successful request" do
