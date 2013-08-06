@@ -132,6 +132,15 @@ module OpenObject
       end
     end
 
+    def unlink(user_context,ids)
+      OpenObject.rescue_xmlrpc_fault do
+        result = connection(user_context).execute(open_object_model, 'unlink', ids)
+        OpenObject.logger.debug("OpenObject.unlink ids : #{ids}")
+        OpenObject.logger.debug("Responded with : #{result}")
+        BackendResponse.new( success: result, errors: nil)
+      end
+    end
+
   end
 
 end
