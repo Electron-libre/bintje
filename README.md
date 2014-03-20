@@ -34,6 +34,14 @@ If the OpenObject model name is not you class name underscored, then set the Ope
 Then you can request OpenObject models with standard CRUD methods ...
 See spec/ for more details on how it works
 
+## Generate documentation
+
+1. install yard gem
+2. yard doc
+3. yard graph --dependencies --empty-mixins --full | dot -T svg -o diagram.svg
+4. firefox doc/index.html
+5. firefox doc/diagram.svg
+
 ## Contributing
 
 1. Fork it
