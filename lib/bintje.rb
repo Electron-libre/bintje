@@ -19,7 +19,11 @@
 #
 ##
 
-
+# Library providing support
 require 'active_support/core_ext/string/inflections'
+
+# The main OO binding file
 require 'open_object'
+
+# Version file, no interest
 require 'bintje/version'
