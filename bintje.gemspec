@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["cedric.brancourt@gmail.com"]
   spec.description   = %q{OpenObject xmlrpc interface}
   spec.summary       = %q{Access your OpenObject's model from ruby}
-  spec.homepage      = "http://support.siclic.fr/projects/bintje"
+  spec.homepage      = "http://github.com/Electron-libre/bintje"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
