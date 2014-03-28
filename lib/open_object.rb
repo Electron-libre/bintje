@@ -29,7 +29,7 @@ require 'xmlrpc/parser_patch'
 module OpenObject
 
   # Defines a setter for the `attr` class variable within the current class
-  # param attr [Symbol] the class variable name
+  # @param attr [Symbol] the class variable name
   def self.define_setter(attr)
     class_eval("def self.#{attr}=(val) \n @@#{attr} = val \n end \n", __FILE__, __LINE__+1)
   end
