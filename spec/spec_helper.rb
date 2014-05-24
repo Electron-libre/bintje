@@ -12,5 +12,5 @@ def open_object_settings
   OpenObject.port = '8069'
   OpenObject.common = '/xmlrpc/common'
   OpenObject.object = '/xmlrpc/object'
-  OpenObject.logger = Logger.new('spec/logs/bintje.log')
+  OpenObject.logger = Logger.new(File::NULL)
 end
