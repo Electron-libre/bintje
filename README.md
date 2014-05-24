@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Electron-libre/bintje.svg?branch=master)](https://travis-ci.org/Electron-libre/bintje)
-
+[![Code Climate](https://codeclimate.com/github/Electron-libre/bintje.png)](https://codeclimate.com/github/Electron-libre/bintje)
 # Bintje
 
 Provides few methods to access OpenObject's framework models and methods through xmlrpc.
