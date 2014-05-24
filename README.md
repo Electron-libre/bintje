@@ -32,7 +32,7 @@ If the OpenObject model name is not you class name underscored, then set the Ope
     end
 
 Then you can request OpenObject models with standard CRUD methods ...
-See spec/ for more details on how it works
+See ``spec/reciever_model_spec.rb`` for more details on how it works
 
 ## Generate documentation
 
