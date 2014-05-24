@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'bintje'
 require 'coveralls'
 Coveralls.wear!
+require 'bintje'
 
 RSpec.configure do |config|
 end
