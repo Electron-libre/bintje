@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Electron-libre/bintje.svg?branch=master)](https://travis-ci.org/Electron-libre/bintje)
+
 # Bintje
 
 Provides few methods to access OpenObject's framework models and methods through xmlrpc.
